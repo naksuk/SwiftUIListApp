@@ -14,7 +14,7 @@ struct Drink: Identifiable {
 }
 
 struct ContentView: View {
-    let drink: [[Drink]] = [
+    let drinks: [[Drink]] = [
         [.init(id: 0, name: "enegy", image: Image("enegy")),
         .init(id: 1, name: "khaos", image: Image("khaos")),
         .init(id: 2, name: "absolute_zero", image: Image("absolute_zero"))],
@@ -32,11 +32,11 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             List {
-                ForEach(drink.startIndex...(drink.endIndex - 1), id: \.self) { section in
+                ForEach(drinks.startIndex...(drinks.endIndex - 1), id: \.self) { section in
                     Section(header: Text(self.switchHeaderTitle(section: section))
                         .font(.system(size: 30))
                         .fontWeight(.heavy)) {
-                    ForEach(drink[section]) { drink in
+                    ForEach(drinks[section]) { drink in
                         DrinkRow(drink: drink, generation: self.switchHeaderTitle(section: section))
                         }
                     }.frame(height: 70)
