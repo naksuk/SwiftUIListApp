@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-struct Icon: Identifiable {
+struct Drink: Identifiable {
     var id: Int
     let name: String
     let image: Image
 }
 
 struct ContentView: View {
-    let icons: [[Icon]] = [
+    let drink: [[Drink]] = [
         [.init(id: 0, name: "enegy", image: Image("enegy")),
         .init(id: 1, name: "khaos", image: Image("khaos")),
         .init(id: 2, name: "absolute_zero", image: Image("absolute_zero"))],
@@ -32,21 +32,12 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             List {
-                ForEach(icons.startIndex...(icons.endIndex - 1), id: \.self) { section in
+                ForEach(drink.startIndex...(drink.endIndex - 1), id: \.self) { section in
                     Section(header: Text(self.switchHeaderTitle(section: section))
                         .font(.system(size: 30))
                         .fontWeight(.heavy)) {
-                    ForEach(icons[section]) { icon in
-                            HStack {
-                                icon.image
-                                    .resizable()
-                                    .scaledToFill()
-                                    .clipShape(Circle())
-                                    .frame(width: 50, height: 50)
-                                Text(icon.name)
-                                    .font(.headline)
-                                    .padding(.leading, 20)
-                            }
+                    ForEach(drink[section]) { drink in
+                        DrinkRow(drink: drink, generation: self.switchHeaderTitle(section: section))
                         }
                     }.frame(height: 70)
                 }
@@ -57,15 +48,68 @@ struct ContentView: View {
     private func switchHeaderTitle(section: Int) -> String {
         switch section {
         case 0:
-            return "legend"
+            return "Legend"
         case 1:
-            return "older"
+            return "Older"
         case 2:
-            return "newer"
+            return "Newer"
         default:
             return ""
         }
         
+    }
+}
+
+struct DrinkRow: View {
+    
+    let drink: Drink
+    let generation: String
+    
+    var body: some View {
+        HStack {
+            NavigationLink(destination: DrinkDetail(drink: drink, generation: generation)) {
+                drink.image
+                    .resizable()
+                    .scaledToFill()
+                    .clipShape(Circle())
+                    .frame(width: 50, height: 50)
+                Text(drink.name)
+                    .font(.headline)
+                    .padding(.leading, 20)
+            }
+        }
+    }
+}
+
+struct DrinkDetail: View {
+    let drink: Drink
+    let generation: String
+    
+    var body: some View {
+        NavigationView {
+            VStack {
+                drink.image
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 300, height: 400, alignment: .top)
+                    .border(.black, width: 0.5)
+                    .padding(.init(top: 0, leading: 50, bottom: 0, trailing: 50))
+                HStack {
+                    Text(drink.name)
+                        .font(.system(size: 25, weight: .heavy))
+                        .foregroundColor(.gray)
+                }
+                .frame(width: 400, height: 40, alignment: .trailing)
+                .padding(.trailing, 60)
+                HStack {
+                    Text(generation)
+                        .font(.system(size: 40, weight: .heavy))
+                        .padding(.leading, 30)
+                }
+                .frame(width: 400, height: 40, alignment: .leading)
+                .padding(.leading, 60)
+            }.padding(.top, -200)
+        }.navigationBarTitle(Text("Drinlk"), displayMode: .inline)
     }
 }
 
